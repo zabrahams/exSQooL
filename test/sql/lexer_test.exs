@@ -5,7 +5,7 @@ defmodule SQL.LexerTest do
   test "create table statement" do
     query = "CREATE TABLE puppies;"
 
-    lexed_query = Lexer.lex(query)
+    lexed_query = Lexer.process(query)
 
     expected = [
       %Lexer.Token{type: :create, literal: "CREATE"},
@@ -13,7 +13,6 @@ defmodule SQL.LexerTest do
       %Lexer.Token{type: :table_name, literal: "puppies"},
       %Lexer.Token{type: :semicolon, literal: ";"}
     ]
-
 
     assert lexed_query == expected
   end
