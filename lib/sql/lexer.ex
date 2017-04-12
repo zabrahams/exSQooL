@@ -4,6 +4,7 @@ defmodule SQL.Lexer do
   def process(query) do
     query
     |> space_semicolon
+    |> space_commas
     |> split
     |> lex_tokens
   end
@@ -11,6 +12,11 @@ defmodule SQL.Lexer do
   defp space_semicolon(query) do
     query
     |> String.replace(";", " ; ")
+  end
+
+  def space_commas(query) do
+    query
+    |> String.replace(",", " , ")
   end
 
   defp split(query) do
@@ -23,15 +29,23 @@ defmodule SQL.Lexer do
 
   #TODO define this thing!
   defp determine_token(literal) do
-    case literal do
+    case String.upcase(literal) do
       "CREATE" ->
         %Token{type: :create, literal: literal}
       "TABLE" ->
         %Token{type: :table, literal: literal}
       ";" ->
         %Token{type: :semicolon, literal: literal}
+      "SELECT" ->
+        %Token{type: :select, literal: literal}
+      "FROM" ->
+        %Token{type: :from, literal: literal}
+      "*" ->
+        %Token{type: :*, literal: literal}
+      "," ->
+        %Token{type: :comma, literal: literal}    
       _ ->
-        %Token{type: :table_name, literal: literal}
+        %Token{type: :identifier, literal: literal}
     end
   end
 
