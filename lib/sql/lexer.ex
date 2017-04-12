@@ -29,22 +29,31 @@ defmodule SQL.Lexer do
 
   #TODO define this thing!
   defp determine_token(literal) do
-    case String.upcase(literal) do
-      "CREATE" ->
+    upcased = String.upcase(literal)
+    cond do
+     upcased == "CREATE" ->
         %Token{type: :create, literal: literal}
-      "TABLE" ->
+      upcased == "TABLE" ->
         %Token{type: :table, literal: literal}
-      ";" ->
+      upcased == ";" ->
         %Token{type: :semicolon, literal: literal}
-      "SELECT" ->
+      upcased == "SELECT" ->
         %Token{type: :select, literal: literal}
-      "FROM" ->
+      upcased == "FROM" ->
         %Token{type: :from, literal: literal}
-      "*" ->
+      upcased == "*" ->
         %Token{type: :*, literal: literal}
-      "," ->
-        %Token{type: :comma, literal: literal}    
-      _ ->
+      upcased == "WHERE" ->
+        %Token{type: :where, literal: literal}
+      upcased == "=" ->
+        %Token{type: :=, literal: literal}
+      upcased == "" ->
+        %Token{type: :integer, literal: literal}
+      upcased == "," ->
+        %Token{type: :comma, literal: literal}
+      String.match?(upcased, ~r(\d+)) ->
+        %Token{type: :integer, literal: literal}
+      true ->
         %Token{type: :identifier, literal: literal}
     end
   end
