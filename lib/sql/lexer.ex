@@ -58,4 +58,20 @@ defmodule SQL.Lexer do
     end
   end
 
+  def lex('', _, tokens),  do: tokens
+  def lex(input, nil, tokens) do
+    [partial_token | remainder] = input
+    lex(remainder, partial_token, tokens)
+  end
+  def lex(input, partial_token, tokens) when is_sql_string(partial_token) do
+    if Enum.at(input, 0) == ?'&& Enum.at(partial_token, -1) != ?\ do
+      ...
+
+
+  end
+
+  def is_sql_string(input) do
+    Enum.at(input, 0) == ?'
+  end
+
 end
