@@ -58,20 +58,46 @@ defmodule SQL.Lexer do
     end
   end
 
-  def lex('', _, tokens),  do: tokens
+  def lex('', nil, tokens),  do: tokens
   def lex(input, nil, tokens) do
     [partial_token | remainder] = input
     lex(remainder, partial_token, tokens)
   end
-  def lex(input, partial_token, tokens) when is_sql_string(partial_token) do
-    if Enum.at(input, 0) == ?'&& Enum.at(partial_token, -1) != ?\ do
-      ...
-
-
+  def lex(input, partial_token, tokens) when is_sql_string?(partial_token) do
+    lex_string(input, partial_token, tokens)
+  end
+  def lex(input, partial_token, tokens) when is_sql_symbol(partial_token) do
+    lex_symbol(input, partial_token, tokens)
   end
 
-  def is_sql_string(input) do
+  def lex_string(input, partial_token, tokens) do
+    cond do
+      is_sql_string?(input) && Enum.at(partial_token, -1) != ?\ ->
+        [ _ | remainder] = input
+        [ _ | literal] = partial_token
+        new_token = %Token{type: :string, literal: List.to_string(literal)}
+        lex(remainder, nil, tokens ++ new_token)
+      _ ->
+        [new_input | remainder] = input
+        lex(remainder, partial_token ++ new_input, tokens)
+    end
+  end
+
+  def lex_symbol(input, partial_token, tokens) do
+    cond do
+      partial_token == ?; ->
+        new_token = %Token{type: :semicolon, literal: ";"}
+    end
+  end
+
+  def is_sql_symbol?(input) do
+    case Enum.at(input, 0) do
+      ?;, ?,, ?=, ?>, ?< -> true
+      _ -> false
+    end
+  end
+
+  def is_sql_string?(input) do
     Enum.at(input, 0) == ?'
   end
-
 end
