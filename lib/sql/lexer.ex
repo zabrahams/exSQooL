@@ -87,6 +87,7 @@ defmodule SQL.Lexer do
     cond do
       partial_token == ?; ->
         new_token = %Token{type: :semicolon, literal: ";"}
+        lex(input, nil, tokens ++ new_token)
     end
   end
 
