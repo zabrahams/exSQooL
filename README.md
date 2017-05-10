@@ -1,4 +1,4 @@
-# Exsqool
+d# Exsqool
 
 SQL database in Elixir, supporting the following language elements:
 
