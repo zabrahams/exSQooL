@@ -73,21 +73,24 @@ defmodule SQL.Lexer do
   def lex_string(input, partial_token, tokens) do
     cond do
       is_sql_string?(input) && Enum.at(partial_token, -1) != ?\ ->
-        [ _ | remainder] = input
-        [ _ | literal] = partial_token
+        remainder = tl(input)
+        literal = tl(partial_token)
         new_token = %Token{type: :string, literal: List.to_string(literal)}
-        lex(remainder, nil, tokens ++ new_token)
+        lex(remainder, nil, [new_token | tokens])
       _ ->
         [new_input | remainder] = input
-        lex(remainder, partial_token ++ new_input, tokens)
+        lex(remainder, partial_token ++ [new_input], tokens)
     end
   end
 
   def lex_symbol(input, partial_token, tokens) do
-    cond do
-      partial_token == ?; ->
+    case partial_token do
+      ?; ->
         new_token = %Token{type: :semicolon, literal: ";"}
-        lex(input, nil, tokens ++ new_token)
+        lex(input, nil, [new_token | tokens])
+      ?= ->
+        new_token = %Token{type: :=, literal: "="}
+        lex(input, nil, [new_token | tokens])
     end
   end
 
