@@ -24,7 +24,7 @@ defmodule SQL.LexerTest do
 
     expected = [
       %Lexer.Token{type: :select, literal: "SELECT"},
-      %Lexer.Token{type: :*, literal: "*"},
+      %Lexer.Token{type: :asterisk, literal: "*"},
       %Lexer.Token{type: :from, literal: "FROM"},
       %Lexer.Token{type: :identifier, literal: "puppies"},
       %Lexer.Token{type: :semicolon, literal: ";"}
@@ -40,7 +40,7 @@ defmodule SQL.LexerTest do
 
     expected = [
       %Lexer.Token{type: :select, literal: "select"},
-      %Lexer.Token{type: :*, literal: "*"},
+      %Lexer.Token{type: :asterisk, literal: "*"},
       %Lexer.Token{type: :from, literal: "from"},
       %Lexer.Token{type: :identifier, literal: "puppies"},
       %Lexer.Token{type: :semicolon, literal: ";"}
@@ -75,12 +75,12 @@ defmodule SQL.LexerTest do
 
     expected = [
       %Lexer.Token{type: :select, literal: "SELECT"},
-      %Lexer.Token{type: :*, literal: "*"},
+      %Lexer.Token{type: :asterisk, literal: "*"},
       %Lexer.Token{type: :from, literal: "FROM"},
       %Lexer.Token{type: :identifier, literal: "puppies"},
       %Lexer.Token{type: :where, literal: "WHERE"},
       %Lexer.Token{type: :identifier, literal: "eyes"},
-      %Lexer.Token{type: :=, literal: "="},
+      %Lexer.Token{type: :equals, literal: "="},
       %Lexer.Token{type: :integer, literal: "1"},
       %Lexer.Token{type: :semicolon, literal: ";"}
     ]
@@ -98,12 +98,12 @@ WHERE eyes = 1;
 
     expected = [
       %Lexer.Token{type: :select, literal: "SELECT"},
-      %Lexer.Token{type: :*, literal: "*"},
+      %Lexer.Token{type: :asterisk, literal: "*"},
       %Lexer.Token{type: :from, literal: "FROM"},
       %Lexer.Token{type: :identifier, literal: "puppies"},
       %Lexer.Token{type: :where, literal: "WHERE"},
       %Lexer.Token{type: :identifier, literal: "eyes"},
-      %Lexer.Token{type: :=, literal: "="},
+      %Lexer.Token{type: :equals, literal: "="},
       %Lexer.Token{type: :integer, literal: "1"},
       %Lexer.Token{type: :semicolon, literal: ";"}
     ]
@@ -114,19 +114,19 @@ WHERE eyes = 1;
   test "select with string" do
     query = """
 SELECT * FROM puppies
-WHERE breed = "Pineapple Tail";
+WHERE breed = 'Pineapple Tail';
 """
 
     lexed_query = Lexer.process(query)
 
     expected = [
       %Lexer.Token{type: :select, literal: "SELECT"},
-      %Lexer.Token{type: :*, literal: "*"},
+      %Lexer.Token{type: :asterisk, literal: "*"},
       %Lexer.Token{type: :from, literal: "FROM"},
       %Lexer.Token{type: :identifier, literal: "puppies"},
       %Lexer.Token{type: :where, literal: "WHERE"},
       %Lexer.Token{type: :identifier, literal: "breed"},
-      %Lexer.Token{type: :=, literal: "="},
+      %Lexer.Token{type: :equals, literal: "="},
       %Lexer.Token{type: :string, literal: "Pineapple Tail"},
       %Lexer.Token{type: :semicolon, literal: ";"}
     ]
