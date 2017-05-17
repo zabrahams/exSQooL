@@ -8,37 +8,6 @@ defmodule SQL.Lexer do
     |> Enum.reverse()
   end
 
-  #TODO define this thing!
-  defp determine_token(literal) do
-    upcased = String.upcase(literal)
-    cond do
-     upcased == "CREATE" ->
-        %Token{type: :create, literal: literal}
-      upcased == "TABLE" ->
-        %Token{type: :table, literal: literal}
-      upcased == ";" ->
-        %Token{type: :semicolon, literal: literal}
-      upcased == "SELECT" ->
-        %Token{type: :select, literal: literal}
-      upcased == "FROM" ->
-        %Token{type: :from, literal: literal}
-      upcased == "*" ->
-        %Token{type: :star, literal: literal}
-      upcased == "WHERE" ->
-        %Token{type: :where, literal: literal}
-      upcased == "=" ->
-        %Token{type: :equals, literal: literal}
-      upcased == "" ->
-        %Token{type: :integer, literal: literal}
-      upcased == "," ->
-        %Token{type: :comma, literal: literal}
-      String.match?(upcased, ~r(\d+)) ->
-        %Token{type: :integer, literal: literal}
-      true ->
-        %Token{type: :identifier, literal: literal}
-    end
-  end
-
   def lex('', nil, tokens),  do: tokens
   def lex(input, nil, tokens) do
     [first_char | remainder] = input
